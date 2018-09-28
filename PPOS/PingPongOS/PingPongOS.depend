@@ -1,0 +1,13 @@
+# depslib dependency file v1.0
+1440409456 source:/home/woich/Documentos/SO/ping-pong-os---projetos-20171129/p00/testafila.c
+	<stdio.h>
+	<stdlib.h>
+	<assert.h>
+	"queue.h"
+
+1440409443 /home/woich/Documentos/SO/ping-pong-os---projetos-20171129/p00/queue.h
+
+1538174784 source:/home/woich/Documentos/SO/ping-pong-os---projetos-20171129/p00/queue.c
+	"queue.h"
+	<stdio.h>
+
