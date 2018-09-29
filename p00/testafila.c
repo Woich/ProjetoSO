@@ -151,6 +151,7 @@ int main (int argc, char **argv, char **envp)
    while (i<N)
    {
       aux = fila0 ;
+      printf("Posição:%d\n", i);
       queue_remove ((queue_t**) &fila0, (queue_t*) aux) ;
       assert (fila_correta (fila0)) ;  // estrutura continua correta
       assert (aux->id == i) ;            // testa ordem do elemento removido

@@ -41,9 +41,9 @@ queue_t *queue_remove (queue_t **queue, queue_t *elem){
                 printf("Lista está vázia\n");
             }else{
                 queue_t *atual;//Define o elemento a ser avaliado no momento inicializando ele como o primeiro elemento
-                atual = queue;
+                atual = *queue;
         /*Loop para buscar na lista desejada*/
-                while((atual->next != queue)){
+                do{
                 /* Valida se o elemento buscado foi encontrado */
                     if(atual == elem){
                         if(atual->next == atual){//Valida se a lista possui apena um elmento, caso sim apaga todas as refrencias dele sem destruí-lo
@@ -55,7 +55,7 @@ queue_t *queue_remove (queue_t **queue, queue_t *elem){
                             atual->next->prev = atual->prev;
                             atual->prev->next = atual->next;
 
-                            if(*queue == elem){//caso o que será retirado seja o primeiro da lista
+                            if((*queue) == elem){//caso o que será retirado seja o primeiro da lista
                                 (*queue) = (*queue)->next;
                             }
                         /*apaga todas as refrencias dele sem destruí-lo*/
@@ -66,9 +66,8 @@ queue_t *queue_remove (queue_t **queue, queue_t *elem){
                         existeFila = 1;
                         return(atual);
                     }
-
                     atual = atual->next;
-                }
+                }while(atual != (*queue));
 
                 if(existeFila == 0){
                     printf("Elemento selecionado não existe na fila eviada\n");
@@ -97,4 +96,21 @@ int queue_size (queue_t *queue){
 }
 
 void queue_print (char *name, queue_t *queue, void print_elem (void*) ){
+
+    printf("%s: ", name);
+
+    queue_t *atual;//Define o elemento a ser impresso no momento inicializando ele como o primeiro elemento
+    atual = queue;
+    if(queue != NULL){//avalia se a lista existe
+        /*Loop para percorrer lista*/
+        do{
+            print_elem(atual);//Imprime elemento
+            atual=atual->next;//Passa para o próximo
+            if(atual != queue){
+                printf(" ");
+            }
+        }while(atual != queue);
+    }
+
+    printf("\n");
 }
