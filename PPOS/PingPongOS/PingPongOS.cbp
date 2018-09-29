@@ -38,6 +38,9 @@
 		<Unit filename="../../p00/testafila.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="../../p01/contexts.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Extensions>
 			<code_completion />
 			<debugger />
