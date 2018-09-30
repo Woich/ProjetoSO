@@ -126,7 +126,9 @@ int mqueue_msgs (mqueue_t *queue) ;
 // função que define o despachante;
 void dispatcher_body () ;
 //Função que define o escalonamento;
-void escalonamento();
+task_t *escalonamento();
+//Função para realizar o envelhecimento das tarefas
+void envelhecimento();
 //==============================================================================
 
 // Redefinir funcoes POSIX "proibidas" como "FORBIDDEN" (gera erro ao compilar)

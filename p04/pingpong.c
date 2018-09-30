@@ -137,7 +137,7 @@ void dispatcher_body (){
     //Enquanto existir tarefas a serem executadas
     while(queue_size((queue_t *) tarefasProntas) > 0){
         //Inicialização de próximoa com primeira tarefa da lista de prontas.
-        proxima = tarefasProntas;
+        proxima = escalonamento();
         //Se existe uma próxima tarefa
         if(proxima != NULL){
             //Remove a tarefa da pilha de prontas para evitar que a mesma tarefa sempre seja a unica acionada
@@ -145,6 +145,8 @@ void dispatcher_body (){
 
             //Se a próxima não for a main
             if(proxima != enderecoMain){
+                //Envelhecimento de todas as tarefas na fila de prontas
+                envelhecimento();
                 //Altera a tarefa em execução
                 task_switch(proxima);
             }
@@ -192,7 +194,40 @@ void task_resume (task_t *task){
 }
 
 //Essa função deve retornar a tarefa de maior prioridade
-void escalonamento(){}
+task_t *escalonamento(){
+    //Verifica se a lista existe
+    if(tarefasProntas != NULL){
+
+        task_t *atual, *menorValorPrio;
+
+        //Inicializa o atual e o menor sendo o menorValorPrio inicializado com o primeiro elemento da lista e o atual o segundo
+        atual = tarefasProntas;
+        atual = atual->next;
+        menorValorPrio = tarefasProntas;
+        //Loop para percorrer toda a lista
+        while(atual != tarefasProntas){
+
+
+            if(atual->prioDinamica < menorValorPrio->prioDinamica){
+                menorValorPrio = atual;
+            }else if(atual->prioDinamica == menorValorPrio->prioDinamica){//caso exista um empate
+                if(atual->prioEstatica < menorValorPrio->prioEstatica){//o desempate é feito com base a prioridade estática de cada elemento
+                    menorValorPrio = atual;
+                }
+            }
+
+            atual = atual->next;
+        }
+
+        //Reinicia a prioridade dinamica da tarefa;
+        menorValorPrio->prioDinamica = menorValorPrio->prioEstatica;
+        return menorValorPrio;
+
+    }else{
+        return NULL;
+    }
+
+}
 
 int task_getprio (task_t *task){
 
@@ -207,4 +242,25 @@ void task_setprio (task_t *task, int prio){
         task->prioDinamica = prio;
         task->prioEstatica = prio;
     }
+}
+
+void envelhecimento(){
+    //Verifica se lista existe
+    if(tarefasProntas != NULL){
+        //Inicialização da váriavel que tem a tarefa a ser alterada;
+        task_t *atual;
+        atual = tarefasProntas;
+        //Loop para percorrer lista
+        do{
+            atual->prioDinamica = atual->prioDinamica - 1;
+
+            if(atual->prioDinamica < -20){
+                atual->prioDinamica = -20;
+            }
+
+            atual = atual->next;
+
+        }while(atual != tarefasProntas);
+    }
+
 }
