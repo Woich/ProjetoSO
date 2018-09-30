@@ -117,7 +117,7 @@ void task_exit(int exitCode){
 	    printf("task_exit: exit da tarefa %d\n", tarefaAtual->tid);
     #endif
 
-    if(tarefaAtual != despachante){
+    if(tarefaAtual != &despachante){
         //retorna para o despachante
         task_switch(&despachante);
     }else{
@@ -132,9 +132,6 @@ void dispatcher_body (){
     task_t *enderecoMain;
     enderecoMain = &tarefaMain;
 
-    task_t *enderecoAtual;
-    enderecoAtual = tarefaAtual;
-
     //Enquanto existir tarefas a serem executadas
     while(queue_size((queue_t *) tarefasProntas) > 0){
         //Inicialização de próximoa com primeira tarefa da lista de prontas.
@@ -148,8 +145,6 @@ void dispatcher_body (){
             if(proxima != enderecoMain){
                 //Altera a tarefa em execução
                 task_switch(proxima);
-            }else{
-                queue_append((queue_t **) &tarefasProntas, (queue_t *) enderecoMain);
             }
 
         }
