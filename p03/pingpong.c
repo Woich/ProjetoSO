@@ -154,7 +154,9 @@ void dispatcher_body (){
 }
 
 void task_yield (){
+
     if(tarefaAtual != despachante){
+        //Pega a tarefa atual e coloca ela na fina novamente caso não tenha sido finalizada ainda
         queue_append((queue_t **) &tarefasProntas, (queue_t *) tarefaAtual);
     }
 
