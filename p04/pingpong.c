@@ -61,7 +61,7 @@ int task_create(task_t *task, void (*start_func)(void *), void *arg){
 	task->tid = nextTaskId;
 	nextTaskId++;
 
-    //Adicionando uma prioridade a tarefa
+    //Inicializa as prioridades da tarefa
     task->prioEstatica = 0;
     task->prioEstatica = 0;
 
@@ -196,4 +196,13 @@ void task_resume (task_t *task){
 
 int task_getprio (task_t *task){
     return NULL;
+}
+
+void task_setprio (task_t *task, int prio){
+    //Verifica se a tarefa existe
+    if(task != NULL){
+        //Define as duas prioridades inicialmente como a prioridade passada
+        task->prioDinamica = prio;
+        task->prioEstatica = prio;
+    }
 }
