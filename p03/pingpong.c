@@ -123,6 +123,9 @@ void task_exit(int exitCode){
 
 void dispatcher_body (){
     task_t *proxima;
+    //pega o endereço da main
+    task_t *enderecoMain;
+    enderecoMain = &tarefaMain;
 
     //Enquanto existir tarefas a serem executadas
     while(queue_size((queue_t *) tarefasProntas) > 0){
@@ -133,8 +136,14 @@ void dispatcher_body (){
             //Remove a tarefa da pilha de prontas para evitar que a mesma tarefa sempre seja a unica acionada
             queue_remove((queue_t **) &tarefasProntas, (queue_t *) proxima);
 
-            //Altera a tarefa em execução
+            //Se a próxima não for a main
+            if(proxima != enderecoMain){
+                //Altera a tarefa em execução
             task_switch(proxima);
+            }
+
+
+
 
         }
     }
