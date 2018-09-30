@@ -195,7 +195,9 @@ void task_resume (task_t *task){
 //void escalonamento(){}
 
 int task_getprio (task_t *task){
-    return NULL;
+
+    return tarefaAtual->prioEstatica;
+
 }
 
 void task_setprio (task_t *task, int prio){

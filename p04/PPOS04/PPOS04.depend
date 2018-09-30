@@ -1,0 +1,18 @@
+# depslib dependency file v1.0
+1428415908 source:/home/woich/Documentos/SO/ping-pong-os---projetos-20171129/p04/pingpong-scheduler.c
+	<stdio.h>
+	<stdlib.h>
+	"pingpong.h"
+
+1538325055 /home/woich/Documentos/SO/ping-pong-os---projetos-20171129/p04/pingpong.h
+	"datatypes.h"
+
+1538337625 /home/woich/Documentos/SO/ping-pong-os---projetos-20171129/p04/datatypes.h
+	<ucontext.h>
+
+1538321513 source:/home/woich/Documentos/SO/ping-pong-os---projetos-20171129/p04/queue.c
+	"queue.h"
+	<stdio.h>
+
+1440409443 /home/woich/Documentos/SO/ping-pong-os---projetos-20171129/p04/queue.h
+
