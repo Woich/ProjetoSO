@@ -32,7 +32,8 @@ void pingpong_init (){
 	tarefaMain.prev = NULL;
     tarefaMain.next = NULL;
     tarefaMain.tid = 0;
-    tarefaMain.prioridade = 0;
+    tarefaMain.prioEstatica = 0;
+    tarefaMain.prioDinamica = tarefaMain.prioEstatica;
 
 	//tid da main eh 0, iniciando a sequencia
 	nextTaskId = 1;
@@ -61,7 +62,8 @@ int task_create(task_t *task, void (*start_func)(void *), void *arg){
 	nextTaskId++;
 
     //Adicionando uma prioridade a tarefa
-    task->prioridade = 0;
+    task->prioEstatica = 0;
+    task->prioEstatica = 0;
 
 	//informações do contexto
 	task->Contexto.uc_stack.ss_sp = stack ;
@@ -191,3 +193,7 @@ void task_resume (task_t *task){
 
 //Essa função deve retornar a tarefa de maior prioridade
 //void escalonamento(){}
+
+int task_getprio (task_t *task){
+    return NULL;
+}
