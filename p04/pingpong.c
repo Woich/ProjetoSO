@@ -192,7 +192,7 @@ void task_resume (task_t *task){
 }
 
 //Essa função deve retornar a tarefa de maior prioridade
-//void escalonamento(){}
+void escalonamento(){}
 
 int task_getprio (task_t *task){
 
