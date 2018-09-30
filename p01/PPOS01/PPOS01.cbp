@@ -31,9 +31,14 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
-		<Unit filename="../contexts.c">
+		<Unit filename="../../p02/datatypes.h" />
+		<Unit filename="../../p02/pingpong-tasks1.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="../../p02/pingpong.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../p02/pingpong.h" />
 		<Extensions>
 			<code_completion />
 			<debugger />
