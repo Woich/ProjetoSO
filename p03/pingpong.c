@@ -14,7 +14,9 @@
 
 
 //macro global task main (encapsular a tarefa da main)
-task_t tarefaMain, *tarefaAtual, dispatcher;
+task_t tarefaMain, *tarefaAtual, *despachante;
+//lista de tarefas prontas para execução e suspensas.
+task_t **tarefasProntas, **tarefasSuspensas;
 
 int nextTaskId;
 
@@ -30,12 +32,13 @@ void pingpong_init (){
 	tarefaMain.prev = NULL;
     tarefaMain.next = NULL;
     tarefaMain.tid = 0;
+    tarefaMain.prioridade = 0;
 
 	//tid da main eh 0, iniciando a sequencia
 	nextTaskId = 1;
 
-	//Criação do dispatcher
-	task_create(&dispatcher,(void*) dispatcher_body, NULL);
+	//Criação do dispatcher/despachante
+	task_create(&despachante,(void*) dispatcher_body, NULL);
 }
 
 //cria tarefas
@@ -57,6 +60,9 @@ int task_create(task_t *task, void (*start_func)(void *), void *arg){
 	task->tid = nextTaskId;
 	nextTaskId++;
 
+    //Adicionando uma prioridade a tarefa
+    task->prioridade = 0;
+
 	//informações do contexto
 	task->Contexto.uc_stack.ss_sp = stack ;
 	task->Contexto.uc_stack.ss_size = STACKSIZE;
@@ -68,6 +74,9 @@ int task_create(task_t *task, void (*start_func)(void *), void *arg){
 	#ifdef DEBUG
 	    printf("task_create: criou tarefa %d\n", task->tid);
     #endif
+
+    //Adiciona a tarefa na lista de tarefas prontas
+    queue_append((queue_t **) &tarefasProntas, (queue_t *) task);
 
 	//a função deve retornar o id da tarefa ou um codigo
 	//negativo no caso de erro
@@ -113,11 +122,38 @@ void task_exit(int exitCode){
 }
 
 void dispatcher_body (){
+    task_t *proxima;
 
+    //Enquanto existir tarefas a serem executadas
+    while(queue_size((queue_t *) tarefasProntas) > 0){
+        //Inicialização de próximoa com primeira tarefa da lista de prontas.
+        proxima = tarefasProntas;
+        //Se existe uma próxima tarefa
+        if(proxima != NULL){
+            //Remove a tarefa da pilha de prontas para evitar que a mesma tarefa sempre seja a unica acionada
+            queue_remove((queue_t **) &tarefasProntas, (queue_t *) proxima);
+
+            //Altera a tarefa em execução
+            task_switch(proxima);
+
+        }
+    }
+
+    task_exit(0);
 }
 
-void task_yield (){}
+void task_yield (){
+    if(tarefaAtual != despachante){
+        queue_append((queue_t **) &tarefasProntas, (queue_t *) tarefaAtual);
+    }
+
+    task_switch(&despachante);
+
+}
 
 void task_suspend (task_t *task, task_t **queue){}
 
 void task_resume (task_t *task){}
+
+//Essa função deve retornar a tarefa de maior prioridade
+//void escalonamento(){}

@@ -22,16 +22,23 @@
 	<stdlib.h>
 	"pingpong.h"
 
-1428415330 /home/woich/Documentos/SO/ping-pong-os---projetos-20171129/p03/pingpong.h
+1538325055 /home/woich/Documentos/SO/ping-pong-os---projetos-20171129/p03/pingpong.h
 	"datatypes.h"
 
-1538314220 /home/woich/Documentos/SO/ping-pong-os---projetos-20171129/p03/datatypes.h
+1538321752 /home/woich/Documentos/SO/ping-pong-os---projetos-20171129/p03/datatypes.h
 	<ucontext.h>
 
-1538314127 source:/home/woich/Documentos/SO/ping-pong-os---projetos-20171129/p03/pingpong.c
+1538325086 source:/home/woich/Documentos/SO/ping-pong-os---projetos-20171129/p03/pingpong.c
 	<stdio.h>
 	<stdlib.h>
 	<ucontext.h>
 	"pingpong.h"
 	"datatypes.h"
+	"queue.h"
+
+1440409443 /home/woich/Documentos/SO/ping-pong-os---projetos-20171129/p03/queue.h
+
+1538321513 source:/home/woich/Documentos/SO/ping-pong-os---projetos-20171129/p03/queue.c
+	"queue.h"
+	<stdio.h>
 

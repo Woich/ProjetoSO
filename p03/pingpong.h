@@ -123,6 +123,8 @@ int mqueue_destroy (mqueue_t *queue) ;
 // informa o número de mensagens atualmente na fila
 int mqueue_msgs (mqueue_t *queue) ;
 
+// função que define o despachante;
+void dispatcher_body () ;
 //==============================================================================
 
 // Redefinir funcoes POSIX "proibidas" como "FORBIDDEN" (gera erro ao compilar)
