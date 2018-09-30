@@ -78,7 +78,8 @@ queue_t *queue_remove (queue_t **queue, queue_t *elem){
             }
         }
     }
-
+    //para garantir que todos os caminhos tenham um return (gera uma warning)
+    return(NULL);
 }
 
 int queue_size (queue_t *queue){

@@ -14,7 +14,7 @@
 
 
 //macro global task main (encapsular a tarefa da main)
-task_t tarefaMain, *tarefaAtual;
+task_t tarefaMain, *tarefaAtual, dispatcher;
 
 int nextTaskId;
 
@@ -33,6 +33,9 @@ void pingpong_init (){
 
 	//tid da main eh 0, iniciando a sequencia
 	nextTaskId = 1;
+
+	//Criação do dispatcher
+	task_create(&dispatcher,(void*) dispatcher_body, NULL);
 }
 
 //cria tarefas
@@ -108,3 +111,13 @@ void task_exit(int exitCode){
 	//retorna para a main
     task_switch(&tarefaMain);
 }
+
+void dispatcher_body (){
+
+}
+
+void task_yield (){}
+
+void task_suspend (task_t *task, task_t **queue){}
+
+void task_resume (task_t *task){}
