@@ -134,6 +134,8 @@ void dispatcher_body (){
     task_t *enderecoMain;
     enderecoMain = &tarefaMain;
 
+    int prioridadeAtual = enderecoAtual->prioDinamica;
+
     //Enquanto existir tarefas a serem executadas
     while(queue_size((queue_t *) tarefasProntas) > 0){
         //Inicialização de próximoa com primeira tarefa da lista de prontas.
@@ -209,8 +211,11 @@ task_t *escalonamento(){
 
 
             if(atual->prioDinamica < menorValorPrio->prioDinamica){
+                //Caso exista um de valor menor que o que se apresenta atualmente ele passa a ser o menorValorPrio
                 menorValorPrio = atual;
+
             }else if(atual->prioDinamica == menorValorPrio->prioDinamica){//caso exista um empate
+
                 if(atual->prioEstatica < menorValorPrio->prioEstatica){//o desempate é feito com base a prioridade estática de cada elemento
                     menorValorPrio = atual;
                 }
