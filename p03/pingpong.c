@@ -162,9 +162,30 @@ void task_yield (){
 
 }
 
-void task_suspend (task_t *task, task_t **queue){}
+void task_suspend (task_t *task, task_t **queue){
+    if(queue != NULL){
+        if(task != NULL){
+            queue_t *suspensa;
+            //isola a tarefa selecionada
+            suspensa = queue_remove((queue_t **) &queue, (queue_t *) task);
 
-void task_resume (task_t *task){}
+            //Adiciona a tarefa a fila de suspensas
+            queue_append((queue_t **) &tarefasSuspensas, suspensa);
+        }
+    }
+}
+
+void task_resume (task_t *task){
+    if(task != NULL){
+
+        queue_t *suspensa;
+        //isola a tarefa selecionada
+        suspensa = queue_remove((queue_t **) &tarefasSuspensas, (queue_t *) task);
+
+        //Adiciona a tarefa a fila de prontas
+        queue_append((queue_t **) &tarefasProntas, suspensa);
+    }
+}
 
 //Essa função deve retornar a tarefa de maior prioridade
 //void escalonamento(){}
