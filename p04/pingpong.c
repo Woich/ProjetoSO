@@ -134,8 +134,6 @@ void dispatcher_body (){
     task_t *enderecoMain;
     enderecoMain = &tarefaMain;
 
-    int prioridadeAtual = enderecoAtual->prioDinamica;
-
     //Enquanto existir tarefas a serem executadas
     while(queue_size((queue_t *) tarefasProntas) > 0){
         //Inicialização de próximoa com primeira tarefa da lista de prontas.

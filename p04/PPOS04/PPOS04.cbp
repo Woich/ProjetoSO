@@ -31,6 +31,18 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
+		<Unit filename="../datatypes.h" />
+		<Unit filename="../pingpong-scheduler.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../pingpong.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../pingpong.h" />
+		<Unit filename="../queue.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../queue.h" />
 		<Extensions>
 			<code_completion />
 			<debugger />
