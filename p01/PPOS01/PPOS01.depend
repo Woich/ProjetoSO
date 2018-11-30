@@ -109,3 +109,30 @@
 	"datatypes.h"
 	"queue.h"
 
+1427482250 source:/home/woich/Documentos/SO/ping-pong-os---projetos-20171129/p08/pingpong-join.c
+	<stdio.h>
+	<stdlib.h>
+	"pingpong.h"
+
+1538343550 /home/woich/Documentos/SO/ping-pong-os---projetos-20171129/p08/pingpong.h
+	"datatypes.h"
+
+1538409394 /home/woich/Documentos/SO/ping-pong-os---projetos-20171129/p08/datatypes.h
+	<ucontext.h>
+
+1538343550 source:/home/woich/Documentos/SO/ping-pong-os---projetos-20171129/p08/queue.c
+	"queue.h"
+	<stdio.h>
+
+1538343550 /home/woich/Documentos/SO/ping-pong-os---projetos-20171129/p08/queue.h
+
+1543615214 source:/home/woich/Documentos/SO/ping-pong-os---projetos-20171129/p08/pingpong.c
+	<stdio.h>
+	<stdlib.h>
+	<ucontext.h>
+	<signal.h>
+	<sys/time.h>
+	"pingpong.h"
+	"datatypes.h"
+	"queue.h"
+

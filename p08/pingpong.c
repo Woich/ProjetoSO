@@ -22,6 +22,8 @@ task_t tarefaMain, tarefaDespachante, *tarefaAtual ;
 //lista de tarefas prontas para execução e suspensas.
 task_t *tarefasProntas, *tarefasSuspensas;
 
+//Status das tarefas -> 0-Pronta | 1-Finalizada | 2-suspensa
+
 //id da proxima tarefa a ser criada
 int nextTaskId;
 
@@ -63,6 +65,8 @@ void pingpong_init (){
     tarefaMain.prioEstatica = 0;
     tarefaMain.prioDinamica = tarefaMain.prioEstatica;
     tarefaMain.isTarefaSistema = 0;
+    tarefaMain.depedente = NULL;
+    tarefaMain.status = 0;
 
 	//tid da main eh 0, iniciando a sequencia
 	nextTaskId = 1;
@@ -139,6 +143,10 @@ int task_create(task_t *task, void (*start_func)(void *), void *arg){
     task->tempoProcessamento = 0;
     task->inicioTempoExecucao = systime();
     task->nmroAtivacoes = 0;
+
+    //Inicialização de status e depedente
+    task->status = 0;
+    task->depedente = NULL;
 
 	//informações de DEBUG
 	#ifdef DEBUG
@@ -342,6 +350,10 @@ void envelhecimento(){
 
         }while(atual != tarefasProntas);
     }
+
+}
+
+int task_join (task_t *task){
 
 }
 

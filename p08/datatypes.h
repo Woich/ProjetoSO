@@ -27,7 +27,11 @@ typedef struct task_t{
   int inicioTempoExecucao;
   int tempoProcessamento;
   int nmroAtivacoes;
-	// demais informações da tarefa
+  //Status da tarefa
+  int status;
+  //Tarefas que depdendem do final desta tarefa
+  struct task_t *depedente;
+  // demais informações da tarefa
 } task_t ;
 
 // estrutura que define um semáforo
