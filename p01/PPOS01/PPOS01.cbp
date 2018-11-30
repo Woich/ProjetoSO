@@ -38,13 +38,10 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="../../p07/pingpong-maintask.txt" />
+		<Unit filename="../../p07/pingpong.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="../../p07/pingpong.h" />
-		<Unit filename="../../p07/pingpong_fcfs.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="../../p07/pingpong_prioridades.c">
-			<Option compilerVar="CC" />
-		</Unit>
 		<Unit filename="../../p07/queue.c">
 			<Option compilerVar="CC" />
 		</Unit>

@@ -176,7 +176,7 @@ int task_switch(task_t *task){
     #ifdef DEBUG
 		printf("task_switch: mudou a tarefa %d para a tarefa %d\n", temp->tid, tarefaAtual->tid);
 	#endif
-    
+
 	//troca efetivamente o contexto
 	swapcontext(&(temp->Contexto), &(tarefaAtual->Contexto));
 
@@ -198,9 +198,9 @@ void task_exit(int exitCode){
     #endif
 
     printf("Task %d exit: execution time %d ms, processor time %d ms, %d activations\n",
-	    tarefaAtual->tid, 
+	    tarefaAtual->tid,
         systime() - tarefaAtual->inicioTempoExecucao,
-        tarefaAtual->tempoProcessamento, 
+        tarefaAtual->tempoProcessamento,
         tarefaAtual->nmroAtivacoes);
 
     if(tarefaAtual->tid != tarefaDespachante.tid){
@@ -212,26 +212,20 @@ void task_exit(int exitCode){
     }
 }
 
+//escalonamento por fcfs
 void dispatcher_body (){
     task_t *proxima;
-    //pega o endereço da main
-    task_t *enderecoMain;
-    enderecoMain = &tarefaMain;
 
-    //Enquanto existir tarefas a serem executadas
-    while(queue_size((queue_t *) tarefasProntas) > 0){
+    //Enquanto existir tarefas a serem executadas (prontas ou suspensas, nao importa)
+    while(queue_size((queue_t *) tarefasProntas)){//+ queue_size((queue_t *) tarefasSuspensas) > 0 ){
         //Inicialização de próximoa com primeira tarefa da lista de prontas.
-        proxima = escalonamento();
+        proxima = tarefasProntas;
         //Se existe uma próxima tarefa
         if(proxima != NULL){
             //Remove a tarefa da pilha de prontas para evitar que a mesma tarefa sempre seja a unica acionada
             queue_remove((queue_t **) &tarefasProntas, (queue_t *) proxima);
 
-            //Se a próxima não for a main
-            if(proxima != enderecoMain){
-                //Altera a tarefa em execução
-                task_switch(proxima);
-            }
+            task_switch(proxima);
 
         }
     }
@@ -304,7 +298,7 @@ task_t *escalonamento(){
         }
         //Envelhecimento de todas as tarefas na fila de prontas
         envelhecimento();
-        
+
         //Reinicia a prioridade dinamica da tarefa;
         menorValorPrio->prioDinamica = menorValorPrio->prioEstatica;
         return menorValorPrio;
