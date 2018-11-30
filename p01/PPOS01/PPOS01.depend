@@ -42,3 +42,60 @@
 	"queue.h"
 	<stdio.h>
 
+1428420708 source:/home/woich/Documentos/SO/ping-pong-os---projetos-20171129/p07/pingpong-contab-prio.c
+	<stdio.h>
+	<stdlib.h>
+	"pingpong.h"
+
+1538343550 /home/woich/Documentos/SO/ping-pong-os---projetos-20171129/p07/pingpong.h
+	"datatypes.h"
+
+1538409394 /home/woich/Documentos/SO/ping-pong-os---projetos-20171129/p07/datatypes.h
+	<ucontext.h>
+
+1428420708 source:/home/woich/Documentos/SO/ping-pong-os---projetos-20171129/p07/pingpong-contab.c
+	<stdio.h>
+	<stdlib.h>
+	"pingpong.h"
+
+1427482226 source:/home/woich/Documentos/SO/ping-pong-os---projetos-20171129/p07/pingpong-maintask.c
+	<stdio.h>
+	<stdlib.h>
+	"pingpong.h"
+
+1538415110 source:/home/woich/Documentos/SO/ping-pong-os---projetos-20171129/p07/pingpong_com_erro.c
+	<stdio.h>
+	<stdlib.h>
+	<ucontext.h>
+	<signal.h>
+	<sys/time.h>
+	"pingpong.h"
+	"datatypes.h"
+	"queue.h"
+
+1538343550 /home/woich/Documentos/SO/ping-pong-os---projetos-20171129/p07/queue.h
+
+1538416640 source:/home/woich/Documentos/SO/ping-pong-os---projetos-20171129/p07/pingpong_fcfs.c
+	<stdio.h>
+	<stdlib.h>
+	<ucontext.h>
+	<signal.h>
+	<sys/time.h>
+	"pingpong.h"
+	"datatypes.h"
+	"queue.h"
+
+1538416204 source:/home/woich/Documentos/SO/ping-pong-os---projetos-20171129/p07/pingpong_prioridades.c
+	<stdio.h>
+	<stdlib.h>
+	<ucontext.h>
+	<signal.h>
+	<sys/time.h>
+	"pingpong.h"
+	"datatypes.h"
+	"queue.h"
+
+1538343550 source:/home/woich/Documentos/SO/ping-pong-os---projetos-20171129/p07/queue.c
+	"queue.h"
+	<stdio.h>
+
