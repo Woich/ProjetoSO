@@ -20,7 +20,7 @@
 //macro global task main (encapsular a tarefa da main)
 task_t tarefaMain, tarefaDespachante, *tarefaAtual ;
 //lista de tarefas prontas para execução e suspensas.
-task_t *tarefasProntas, *tarefasSuspensas;
+task_t *tarefasProntas, *tarefasSuspensas, *tarefasAdormecidas;
 
 //Status das tarefas -> 0-Pronta | 1-Finalizada | 2-suspensa
 
@@ -66,6 +66,7 @@ void pingpong_init (){
     tarefaMain.prioDinamica = tarefaMain.prioEstatica;
     tarefaMain.isTarefaSistema = 0;
     tarefaMain.depedente = NULL;
+    tarefaMain.tempoAcordar = 0;
 	//tid da main eh 0, iniciando a sequencia
 	nextTaskId = 1;
 
@@ -145,6 +146,8 @@ int task_create(task_t *task, void (*start_func)(void *), void *arg){
     //Inicialização de status e depedente
     task->depedente = NULL;
 
+    //inicializa o tempo para acordar da tarefa
+    task->tempoAcordar = 0;
 	//informações de DEBUG
 	#ifdef DEBUG
 	    printf("task_create: criou tarefa %d\n", task->tid);
@@ -240,7 +243,32 @@ void task_exit(int exitCode){
 
 //escalonamento por fcfs
 void dispatcher_body (){
-    task_t *proxima;
+    //dormente atual é a tarefa que está na fila de tarefas dormindo que deve ser valiada se está pronta para acordar ou não
+    task_t *proxima, *dormenteAtual, *dormenteProxima;
+    //Tarefa dormenter removida da fila de dormentes
+    queue_t *dormenteRemovida;
+
+    //Se existe uma fila de tarefas adormecidas;
+    if(tarefasAdormecidas != NULL){
+        //Inicializa a dormente atual
+        dormenteAtual = tarefasAdormecidas;
+
+        //Segue a lista de adormecida em busca das que pode acordar
+        do{
+            //Pega a referencia da próxima tarefa
+            dormenteProxima = dormenteAtual->next;
+            //Caso já tenha passado o tempo para a tarefa acordar
+            if(dormenteAtual->tempoAcordar <= systime()){
+                //remove da fila de tarefas adormecidas e coloca na fila de prontas
+                dormenteRemovida = queue_remove((queue_t **)&tarefasAdormecidas, (queue_t *) dormenteAtual);
+                queue_append((queue_t **)&tarefasProntas, dormenteRemovida);
+                //Como a tarefa foi removida da fila, atualiza a dormente atual
+                dormenteAtual = dormenteProxima;
+            }else{
+                dormenteAtual = dormenteProxima;
+            }
+        }while((dormenteAtual != tarefasAdormecidas) && (tarefasAdormecidas != NULL));
+    }
 
     //Enquanto existir tarefas a serem executadas (prontas ou suspensas, nao importa)
     while(queue_size((queue_t *) tarefasProntas)){//+ queue_size((queue_t *) tarefasSuspensas) > 0 ){
@@ -389,6 +417,18 @@ int task_join (task_t *task){
     else{
         return (-1);
     }
+}
+
+void task_sleep (int t){
+    //Altera o tempo para acordar para que seja o tempo atual + o tempo dormindo informado
+    //A multiplicação por 1000 ocorre para mudar para milesegundos
+    tarefaAtual->tempoAcordar = systime() + (t*1000);
+
+    //Adiciona na fila de tarefas adormecidas
+    queue_append((queue_t **)&tarefasAdormecidas, (queue_t *)tarefaAtual);
+
+    //muda para a tarefa despachante
+    task_switch(&tarefaDespachante);
 }
 
 //retorna o tempo total que o SO está sendo executado

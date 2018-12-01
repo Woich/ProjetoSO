@@ -31,6 +31,8 @@ typedef struct task_t{
   struct task_t *depedente;
   //código de saída da tarefa
   int codigoSaida;
+  //Tempo de acrodar da tarefa
+  int tempoAcordar;
   // demais informações da tarefa
 } task_t ;
 
