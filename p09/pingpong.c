@@ -247,6 +247,7 @@ void dispatcher_body (){
 
     //Caso exista uma fila de tarefas prontas e/ou adormcedidas
     while(((queue_t *)tarefasProntas != NULL) || ((queue_t *)tarefasAdormecidas != NULL)){
+
         //Caso exista uma fila de prontas
         if((queue_t *)tarefasProntas != NULL){
 
@@ -265,7 +266,6 @@ void dispatcher_body (){
             }
 
         }
-
 
         //Caso exista uma fila de adormecidas
         if((queue_t *)tarefasAdormecidas != NULL){
