@@ -66,7 +66,6 @@ void pingpong_init (){
     tarefaMain.prioDinamica = tarefaMain.prioEstatica;
     tarefaMain.isTarefaSistema = 0;
     tarefaMain.depedente = NULL;
-    tarefaMain.tempoAcordar = 0;
 	//tid da main eh 0, iniciando a sequencia
 	nextTaskId = 1;
 
@@ -146,8 +145,6 @@ int task_create(task_t *task, void (*start_func)(void *), void *arg){
     //Inicialização de status e depedente
     task->depedente = NULL;
 
-    //inicializa o tempo para acordar da tarefa
-    task->tempoAcordar = 0;
 	//informações de DEBUG
 	#ifdef DEBUG
 	    printf("task_create: criou tarefa %d\n", task->tid);
@@ -248,42 +245,54 @@ void dispatcher_body (){
     //Tarefa dormenter removida da fila de dormentes
     queue_t *dormenteRemovida;
 
-    //Se existe uma fila de tarefas adormecidas;
-    if(tarefasAdormecidas != NULL){
-        //Inicializa a dormente atual
-        dormenteAtual = tarefasAdormecidas;
+    //Caso exista uma fila de tarefas prontas e/ou adormcedidas
+    while(((queue_t *)tarefasProntas != NULL) || ((queue_t *)tarefasAdormecidas != NULL)){
+        //Caso exista uma fila de prontas
+        if((queue_t *)tarefasProntas != NULL){
 
-        //Segue a lista de adormecida em busca das que pode acordar
-        do{
-            //Pega a referencia da próxima tarefa
-            dormenteProxima = dormenteAtual->next;
-            //Caso já tenha passado o tempo para a tarefa acordar
-            if(dormenteAtual->tempoAcordar <= systime()){
-                //remove da fila de tarefas adormecidas e coloca na fila de prontas
-                dormenteRemovida = queue_remove((queue_t **)&tarefasAdormecidas, (queue_t *) dormenteAtual);
-                queue_append((queue_t **)&tarefasProntas, dormenteRemovida);
-                //Como a tarefa foi removida da fila, atualiza a dormente atual
-                dormenteAtual = dormenteProxima;
-            }else{
-                dormenteAtual = dormenteProxima;
+            //Enquanto existir tarefas a serem executadas (prontas ou suspensas, nao importa)
+            while(queue_size((queue_t *) tarefasProntas)){//+ queue_size((queue_t *) tarefasSuspensas) > 0 ){
+                //Inicialização de próximoa com primeira tarefa da lista de prontas.
+                proxima = tarefasProntas;
+                //Se existe uma próxima tarefa
+                if(proxima != NULL){
+                    //Remove a tarefa da pilha de prontas para evitar que a mesma tarefa sempre seja a unica acionada
+                    queue_remove((queue_t **) &tarefasProntas, (queue_t *) proxima);
+
+                    task_switch(proxima);
+
+                }
             }
-        }while((dormenteAtual != tarefasAdormecidas) && (tarefasAdormecidas != NULL));
-    }
 
-    //Enquanto existir tarefas a serem executadas (prontas ou suspensas, nao importa)
-    while(queue_size((queue_t *) tarefasProntas)){//+ queue_size((queue_t *) tarefasSuspensas) > 0 ){
-        //Inicialização de próximoa com primeira tarefa da lista de prontas.
-        proxima = tarefasProntas;
-        //Se existe uma próxima tarefa
-        if(proxima != NULL){
-            //Remove a tarefa da pilha de prontas para evitar que a mesma tarefa sempre seja a unica acionada
-            queue_remove((queue_t **) &tarefasProntas, (queue_t *) proxima);
+        }
 
-            task_switch(proxima);
+
+        //Caso exista uma fila de adormecidas
+        if((queue_t *)tarefasAdormecidas != NULL){
+
+            //Se existe uma fila de tarefas adormecidas;
+            if(tarefasAdormecidas != NULL){
+                //Inicializa a dormente atual
+                dormenteAtual = tarefasAdormecidas;
+                //Segue a lista de adormecida em busca das que pode acordar
+                do{
+                    //Pega a referencia da próxima tarefa
+                    dormenteProxima = dormenteAtual->next;
+                    //Caso já tenha passado o tempo para a tarefa acordar
+                    if(dormenteAtual->tempoAcordar <= systime()){
+                        //remove da fila de tarefas adormecidas e coloca na fila de prontas
+                        dormenteRemovida = queue_remove((queue_t **)&tarefasAdormecidas, (queue_t *) dormenteAtual);
+                        queue_append((queue_t **)&tarefasProntas, dormenteRemovida);
+                        //Como a tarefa foi removida da fila, atualiza a dormente atual
+                        dormenteAtual = dormenteProxima;
+                    }else{
+                        dormenteAtual = dormenteProxima;
+                    }
+                }while((dormenteAtual != tarefasAdormecidas) && (tarefasAdormecidas != NULL));
+            }
 
         }
     }
-
     task_exit(0);
 }
 
