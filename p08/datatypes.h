@@ -27,10 +27,10 @@ typedef struct task_t{
   int inicioTempoExecucao;
   int tempoProcessamento;
   int nmroAtivacoes;
-  //Status da tarefa
-  int status;
   //Tarefas que depdendem do final desta tarefa
   struct task_t *depedente;
+  //código de saída da tarefa
+  int codigoSaida;
   // demais informações da tarefa
 } task_t ;
 

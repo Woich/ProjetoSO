@@ -66,8 +66,6 @@ void pingpong_init (){
     tarefaMain.prioDinamica = tarefaMain.prioEstatica;
     tarefaMain.isTarefaSistema = 0;
     tarefaMain.depedente = NULL;
-    tarefaMain.status = 0;
-
 	//tid da main eh 0, iniciando a sequencia
 	nextTaskId = 1;
 
@@ -145,7 +143,6 @@ int task_create(task_t *task, void (*start_func)(void *), void *arg){
     task->nmroAtivacoes = 0;
 
     //Inicialização de status e depedente
-    task->status = 0;
     task->depedente = NULL;
 
 	//informações de DEBUG
@@ -201,6 +198,10 @@ int task_id(){
 
 // encerra a execução da tarefa ao retornar para a main. Exit code?
 void task_exit(int exitCode){
+
+    task_t *depedenteAtual;
+    queue_t *removido;
+
     #ifdef DEBUG
 	    printf("task_exit: exit da tarefa %d\n", tarefaAtual->tid);
     #endif
@@ -210,6 +211,23 @@ void task_exit(int exitCode){
         systime() - tarefaAtual->inicioTempoExecucao,
         tarefaAtual->tempoProcessamento,
         tarefaAtual->nmroAtivacoes);
+
+    if(tarefaAtual->depedente != NULL){
+        while(tarefaAtual->depedente != NULL){
+            //Inicializa a tarefa depedente atual
+            depedenteAtual = tarefaAtual->depedente->next;
+
+            //A tarefa depdeten atual pega o código de saida
+            depedenteAtual->codigoSaida = exitCode;
+
+            //Inicializa a tarefa a ser removida
+            removido = queue_remove((queue_t **)&tarefaAtual->depedente, (queue_t *)depedenteAtual);
+
+            //Coloca a tarefa na pilha de prontas a tarefa que está sendo rtetir
+            queue_append((queue_t **) &tarefasProntas, removido);
+
+        }
+    }
 
     if(tarefaAtual->tid != tarefaDespachante.tid){
         //retorna para o despachante
@@ -255,12 +273,16 @@ void task_yield (){
 void task_suspend (task_t *task, task_t **queue){
     if(queue != NULL){
         if(task != NULL){
+
             queue_t *suspensa;
             //isola a tarefa selecionada
             suspensa = queue_remove((queue_t **) &queue, (queue_t *) task);
-
             //Adiciona a tarefa a fila de suspensas
             queue_append((queue_t **) &tarefasSuspensas, suspensa);
+        }
+    }else{
+        if(task != NULL){
+            queue_append((queue_t **) &tarefasSuspensas, (queue_t *)task);
         }
     }
 }
@@ -354,7 +376,19 @@ void envelhecimento(){
 }
 
 int task_join (task_t *task){
+    //Caso a tarefa exista e não esteja finalizada
+    if(task != NULL){
+        //Adiciona a tarefa atual como uma dependente da tarefa passada.
+        queue_append((queue_t **)&task->depedente, (queue_t *)tarefaAtual);
+        //muda para a tarefa atual para o despachante
+        task_switch(&tarefaDespachante);
+        //retorna o código de saída;
+        return (task->codigoSaida);
 
+    }
+    else{
+        return (-1);
+    }
 }
 
 //retorna o tempo total que o SO está sendo executado
