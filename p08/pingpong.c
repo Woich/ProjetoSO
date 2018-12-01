@@ -217,8 +217,8 @@ void task_exit(int exitCode){
             //Inicializa a tarefa depedente atual
             depedenteAtual = tarefaAtual->depedente->next;
 
-            //A tarefa depdeten atual pega o código de saida
-            depedenteAtual->codigoSaida = exitCode;
+            //A tarefa atual recebe seu código de saída
+            tarefaAtual->codigoSaida = exitCode;
 
             //Inicializa a tarefa a ser removida
             removido = queue_remove((queue_t **)&tarefaAtual->depedente, (queue_t *)depedenteAtual);
