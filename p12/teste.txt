@@ -1,0 +1,91 @@
+
+
+//-----------------------------MUTEX-------------------------------------
+
+int mutex_create(mutex_t* m) {
+    if (m == NULL) {
+        return -1;
+    }
+
+    FLAG_TSL = 0; 
+    m->fila = NULL;
+    m->valor = 1;
+    m->isAtivo = 1;
+    FLAG_TSL = 1; 
+
+    if (ticksRestantesTarefaAtual <= 0) {
+        task_yield();
+    }
+
+    return 0;
+}
+
+int mutex_lock(mutex_t* m) {
+    if (m == NULL || !(m->isAtivo)) {
+        return -1;
+    }
+
+    FLAG_TSL = 0; 
+
+    if (m->valor == 0) { // Se já estiver travado, suspende a task
+        task_suspend(tarefaAtual, &(m->fila));
+
+        FLAG_TSL = 1; 
+        task_yield();
+
+        // Se a tarefa foi acordada devido a um mutex_destroy, retorna -1.
+        if (!(m->isAtivo)) {
+            return -1;
+        }
+
+        return 0;
+    }
+
+    m->valor = 0; // Se não estiver travado, trava e obtém o mutex.
+
+    FLAG_TSL = 1; 
+    if (ticksRestantesTarefaAtual <= 0) {
+        task_yield();
+    }
+    return 0;
+}
+
+int mutex_unlock(mutex_t* m) {
+    if (m == NULL || !(m->isAtivo)) {
+        return -1;
+    }
+
+    FLAG_TSL = 0; 
+
+    if (m->fila != NULL) { // Se alguma task estiver esperando na fila, mantém o mutex travado (para a próxima task) e acorda a primeira task da fila.
+        task_resume(m->fila);
+    }
+    else { // Se não tiver nenhuma task esperando, libera o mutex.
+        m->valor = 1;
+    }
+
+    FLAG_TSL = 1; 
+    if (ticksRestantesTarefaAtual <= 0) {
+        task_yield();
+    }
+    return 0;
+}
+
+int mutex_destroy(mutex_t* m) {
+    if (m == NULL || !(m->isAtivo)) {
+        return -1;
+    }
+
+    FLAG_TSL = 0; 
+    m->isAtivo = 0;
+    while (m->fila != NULL) {
+        task_resume(m->fila);
+    }
+
+    FLAG_TSL = 1; 
+    if (ticksRestantesTarefaAtual <= 0) {
+        task_yield();
+    }
+    return 0;
+}
+

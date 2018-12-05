@@ -91,7 +91,6 @@ void consBody (void * arg)
 
 int main (int argc, char *argv[])
 {
-   int i ;
 
    printf ("Main INICIO\n") ;
 
