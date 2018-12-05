@@ -14,6 +14,8 @@ typedef struct{
     int numBloco;
     int operacao; //0 é ler | 1 é escrever
     void *bufferPedido;
+
+    struct task_t *tarefaPedido; //Tarefa do pedido
 } pedido;
 
 // structura de dados que representa o disco para o SO
@@ -27,6 +29,10 @@ typedef struct
   struct semaphore_t *semAcesso;
 
   int acordadoHandler;
+
+  int discoLivre;//0 está livre | 1 está ocupado;
+
+  int statusDormindo;//0 está dormindo | 1 está pronta;
   // preencher com os campos necessarios
 } disk_t ;
 

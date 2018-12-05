@@ -132,10 +132,11 @@ void pingpong_init() {
 
     // O contexto não precisa ser salvo agora, porque a primeira troca de contexto fará isso.
 
-    // INICIA A TASK body_escalonador
+    // INICIA A TASK body_escalonador e  tarefa de disco
     task_create(&tarefaDispatcher, &body_dispatcher, NULL);
     task_create(&tarefaDisco, &diskDriverBody, NULL);
     queue_remove((queue_t**)&filaPronta, (queue_t*)&tarefaDispatcher);
+    queue_remove((queue_t**)&filaPronta, (queue_t*)&tarefaDisco);
 
     // Ativa o dispatcher
     task_yield();
@@ -778,7 +779,15 @@ void diskDriverBody (void * args){
             return -1;
         }
 
+        //Se o disco foi acordado pelo handler
         if(disco.acordadoHandler == 1){
+            //Adiciona a tarefa do primeiro pedido da fila de pedidos as tarefas prontas
+            queue_append((queue_t **)&filaPronta, (queue_t *)disco.filaPedidos.tarefaPedido);
+            disco.acordadoHandler = 0;
+        }
+
+        //Se disco está livre e possui pedidos na fila
+        if(disco.discoLivre == 0 && (disco.filaPedidos != NULL)){
 
         }
 
@@ -817,6 +826,12 @@ int diskdriver_init (int *numBlocks, int *blockSize){
     //Inicialiaza a variavel que informa se foi acordado por um handler
     disco.acordadoHandler = 0;
 
+    //Inicializa a variavel infrmando que o disco está livre
+    disco.discoLivre = 0;
+
+    //Inicializa a variavel da tarefa como pronta
+    disco.statusDormindo = 1;
+
     return 0;
 
 }
@@ -836,16 +851,67 @@ int disk_block_read (int block, void *buffer){
     pedidoLeitura.numBloco = block;
     pedidoLeitura.operacao = 0;
     pedidoLeitura.bufferPedido = buffer;
+    pedidoLeitura.tarefaPedido = tarefaAtual;
 
     //Adiciona o pedido na fila de pedidos
     queue_append((queue_t **)&disco.filaPedidos, (queue_t*)pedidoLeitura);
 
+    //Se o disco está dormindo
+    if(disco.statusDormindo == 0){
+        //Adiciona a fila de prontas
+        queue_append((queue_t**)&filaPronta, (queue_t*)tarefaDisco);
+        disco.statusDormindo = 1;
+    }
 
+    if(sem_up(disco.semAcesso)){
+        return -1;
+    }
+
+    //remove tarefa atual da fila de prontas e muda para o despachante
+    queue_remove((queue_t**)&filaPronta, (queue_t*)tarefaAtual);
+    task_switch(&tarefaDispatcher);
+
+}
+
+int disk_block_write (int block, void *buffer){
+
+    //Pega o semaforo
+    if(sem_down(disco.semAcesso) < 0){
+        return -1;
+    }
+
+    //Cria pedido de leitura
+    pedido pedidoEscrita;
+    //Inicializa pedido
+    pedidoEscrita.ant = NULL;
+    pedidoEscrita.prox = NULL;
+    pedidoEscrita.numBloco = block;
+    pedidoEscrita.operacao = 1;
+    pedidoEscrita.bufferPedido = buffer;
+    pedidoEscrita.tarefaPedido = tarefaAtual;
+
+    //Adiciona o pedido na fila de pedidos
+    queue_append((queue_t **)&disco.filaPedidos, (queue_t*)pedidoEscrita);
+
+    //Se o disco está dormindo
+    if(disco.statusDormindo == 0){
+        //Adiciona a fila de prontas
+        queue_append((queue_t**)&filaPronta, (queue_t*)tarefaDisco);
+        disco.statusDormindo = 1;
+    }
+
+    if(sem_up(disco.semAcesso)){
+        return -1;
+    }
+
+    //remove tarefa atual da fila de prontas e muda para o despachante
+    queue_remove((queue_t**)&filaPronta, (queue_t*)tarefaAtual);
+    task_switch(&tarefaDispatcher);
 
 }
 
 void handlerDisco(int signum){
     disco.acordadoHandler = 1;
 
-
+    queue_append((queue_t**)&filaPronta, (queue_t*)tarefaDisco);
 }
