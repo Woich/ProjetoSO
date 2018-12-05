@@ -192,3 +192,47 @@
 	<stdio.h>
 	"queue.h"
 
+1428412018 source:/home/woich/Documentos/SO/ping-pong-os---projetos-20171129/p13/harddisk.c
+	<signal.h>
+	<sys/types.h>
+	<unistd.h>
+	<sys/stat.h>
+	<fcntl.h>
+	<time.h>
+	<stdlib.h>
+	<stdio.h>
+	"harddisk.h"
+
+1428412018 /home/woich/Documentos/SO/ping-pong-os---projetos-20171129/p13/harddisk.h
+
+1428413641 source:/home/woich/Documentos/SO/ping-pong-os---projetos-20171129/p13/pingpong-disco.c
+	<stdio.h>
+	<stdlib.h>
+	"pingpong.h"
+	"diskdriver.h"
+
+1544042547 /home/woich/Documentos/SO/ping-pong-os---projetos-20171129/p13/pingpong.h
+	"datatypes.h"
+
+1543856279 /home/woich/Documentos/SO/ping-pong-os---projetos-20171129/p13/datatypes.h
+	<ucontext.h>
+
+1544042632 /home/woich/Documentos/SO/ping-pong-os---projetos-20171129/p13/diskdriver.h
+
+1544043331 source:/home/woich/Documentos/SO/ping-pong-os---projetos-20171129/p13/pingpong.c
+	<stdio.h>
+	<stdlib.h>
+	<signal.h>
+	<string.h>
+	<sys/time.h>
+	"pingpong.h"
+	"harddisk.h"
+	"diskdriver.h"
+	"queue.h"
+
+1543851921 /home/woich/Documentos/SO/ping-pong-os---projetos-20171129/p13/queue.h
+
+1543851915 source:/home/woich/Documentos/SO/ping-pong-os---projetos-20171129/p13/queue.c
+	<stdio.h>
+	"queue.h"
+

@@ -11,6 +11,7 @@
 #include <sys/time.h>
 #include "pingpong.h"
 #include "harddisk.h"
+#include "diskdriver.h"
 #include "queue.h"
 
 #define STACKSIZE 32768
@@ -772,7 +773,11 @@ int mqueue_msgs(mqueue_t* queue) {
 
 /*-------------------DISCO----------------------*/
 
-void diskDriverBody (void * args){
+void diskDriverBody(void * args){
+
+    pedido *pedidoAtual;
+    pedidoAtual = disco.filaPedidos;
+
     while(1){
 
         if(sem_down(disco.semAcesso) < 0){
@@ -781,15 +786,36 @@ void diskDriverBody (void * args){
 
         //Se o disco foi acordado pelo handler
         if(disco.acordadoHandler == 1){
-            //Adiciona a tarefa do primeiro pedido da fila de pedidos as tarefas prontas
-            queue_append((queue_t **)&filaPronta, (queue_t *)disco.filaPedidos.tarefaPedido);
+            //Adiciona a tarefa do primeiro pedido da fila de pedidos as tarefas prontas, e marca o disco como livre
+            queue_append((queue_t **)&filaPronta, (queue_t *)pedidoAtual->tarefaPedido);
             disco.acordadoHandler = 0;
+            disco.discoLivre = 0;
         }
 
         //Se disco está livre e possui pedidos na fila
         if(disco.discoLivre == 0 && (disco.filaPedidos != NULL)){
 
+            queue_remove((queue_t**)&disco.filaPedidos, (queue_t*)pedidoAtual);
+            //Verifica a operação a ser feito
+            if(pedidoAtual->operacao == 0){
+                //Altera o disco para algo está acontecendo e le o bloco
+                disk_cmd (DISK_CMD_READ, pedidoAtual->numBloco, pedidoAtual->bufferPedido);
+                disco.discoLivre = 1;
+            }else{
+                //Altera o disco para algo está acontecendo e esreve no bloco
+                disk_cmd (DISK_CMD_WRITE, pedidoAtual->numBloco, pedidoAtual->bufferPedido);
+                disco.discoLivre = 1;
+            }
+
         }
+
+        if(sem_up(disco.semAcesso) < 0){
+            return -1;
+        }
+
+        //remove tarefa atual da fila de prontas e muda para o despachante
+        queue_remove((queue_t**)&filaPronta, (queue_t*)&tarefaDisco);
+        task_switch(&tarefaDispatcher);
 
     }
 }
@@ -854,22 +880,24 @@ int disk_block_read (int block, void *buffer){
     pedidoLeitura.tarefaPedido = tarefaAtual;
 
     //Adiciona o pedido na fila de pedidos
-    queue_append((queue_t **)&disco.filaPedidos, (queue_t*)pedidoLeitura);
+    queue_append((queue_t **)&disco.filaPedidos, (queue_t*)&pedidoLeitura);
 
     //Se o disco está dormindo
     if(disco.statusDormindo == 0){
         //Adiciona a fila de prontas
-        queue_append((queue_t**)&filaPronta, (queue_t*)tarefaDisco);
+        queue_append((queue_t**)&filaPronta, (queue_t*)&tarefaDisco);
         disco.statusDormindo = 1;
     }
 
-    if(sem_up(disco.semAcesso)){
+    if(sem_up(disco.semAcesso) < 0){
         return -1;
     }
 
     //remove tarefa atual da fila de prontas e muda para o despachante
     queue_remove((queue_t**)&filaPronta, (queue_t*)tarefaAtual);
     task_switch(&tarefaDispatcher);
+
+    return 0;
 
 }
 
@@ -891,16 +919,16 @@ int disk_block_write (int block, void *buffer){
     pedidoEscrita.tarefaPedido = tarefaAtual;
 
     //Adiciona o pedido na fila de pedidos
-    queue_append((queue_t **)&disco.filaPedidos, (queue_t*)pedidoEscrita);
+    queue_append((queue_t **)&disco.filaPedidos, (queue_t*)&pedidoEscrita);
 
     //Se o disco está dormindo
     if(disco.statusDormindo == 0){
         //Adiciona a fila de prontas
-        queue_append((queue_t**)&filaPronta, (queue_t*)tarefaDisco);
+        queue_append((queue_t**)&filaPronta, (queue_t*)&tarefaDisco);
         disco.statusDormindo = 1;
     }
 
-    if(sem_up(disco.semAcesso)){
+    if(sem_up(disco.semAcesso) < 0){
         return -1;
     }
 
@@ -908,10 +936,12 @@ int disk_block_write (int block, void *buffer){
     queue_remove((queue_t**)&filaPronta, (queue_t*)tarefaAtual);
     task_switch(&tarefaDispatcher);
 
+    return 0;
+
 }
 
 void handlerDisco(int signum){
     disco.acordadoHandler = 1;
 
-    queue_append((queue_t**)&filaPronta, (queue_t*)tarefaDisco);
+    queue_append((queue_t**)&filaPronta, (queue_t*)&tarefaDisco);
 }

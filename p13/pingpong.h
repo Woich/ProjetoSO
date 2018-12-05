@@ -125,6 +125,8 @@ int mqueue_msgs (mqueue_t *queue) ;
 
 void handlerDisco(int signum);
 
+void diskDriverBody(void * args);
+
 //==============================================================================
 
 // Redefinir funcoes POSIX "proibidas" como "FORBIDDEN" (gera erro ao compilar)
