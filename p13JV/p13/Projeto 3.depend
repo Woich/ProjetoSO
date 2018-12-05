@@ -1,0 +1,341 @@
+# depslib dependency file v1.0
+1537219956 source:/home/todos/alunos/ct/a1949772/Projeto 3/pingpong-dispatcher.c
+	<stdio.h>
+	<stdlib.h>
+	"pingpong.h"
+
+1537219326 /home/todos/alunos/ct/a1949772/Projeto 3/pingpong.h
+	"datatypes.h"
+
+1537219341 /home/todos/alunos/ct/a1949772/Projeto 3/datatypes.h
+	<ucontext.h>
+
+1534787436 /home/todos/alunos/ct/a1949772/Projeto 3/queue.h
+
+1534787446 source:/home/todos/alunos/ct/a1949772/Projeto 3/queue.c
+	<stdio.h>
+	<stdlib.h>
+	<assert.h>
+	"queue.h"
+
+1537221735 source:/home/todos/alunos/ct/a1949772/Projeto 3/pingpong.c
+	<stdio.h>
+	<stdlib.h>
+	<ucontext.h>
+	"pingpong.h"
+	"queue.h"
+
+1537826101 source:/home/todos/alunos/ct/a1949772/Área de Trabalho/p04/pingpong-dispatcher.c
+	<stdio.h>
+	<stdlib.h>
+	"pingpong.h"
+
+1537208554 /home/todos/alunos/ct/a1949772/Área de Trabalho/p04/pingpong.h
+	"datatypes.h"
+
+1537208552 /home/todos/alunos/ct/a1949772/Área de Trabalho/p04/datatypes.h
+	<ucontext.h>
+
+1537826204 source:/home/todos/alunos/ct/a1949772/Área de Trabalho/p04/pingpong.c
+	<stdio.h>
+	<stdlib.h>
+	<ucontext.h>
+	"pingpong.h"
+	"queue.h"
+
+1537208552 /home/todos/alunos/ct/a1949772/Área de Trabalho/p04/queue.h
+
+1537208552 source:/home/todos/alunos/ct/a1949772/Área de Trabalho/p04/queue.c
+	<stdio.h>
+	<stdlib.h>
+	<assert.h>
+	"queue.h"
+
+1538346546 source:/home/joaovitorbf/Documents/p05/pingpong.c
+	<stdio.h>
+	<stdlib.h>
+	<ucontext.h>
+	<signal.h>
+	<sys/time.h>
+	"pingpong.h"
+	"queue.h"
+
+1538345550 /home/joaovitorbf/Documents/p05/pingpong.h
+	"datatypes.h"
+
+1538345595 /home/joaovitorbf/Documents/p05/datatypes.h
+	<ucontext.h>
+
+1537812052 /home/joaovitorbf/Documents/p05/queue.h
+
+1537812050 source:/home/joaovitorbf/Documents/p05/queue.c
+	<stdio.h>
+	<stdlib.h>
+	<assert.h>
+	"queue.h"
+
+1431725210 source:/home/joaovitorbf/Documents/p05/signal.c
+	<stdio.h>
+	<stdlib.h>
+	<signal.h>
+
+1538344112 source:/home/joaovitorbf/Documents/p05/timer.c
+	<stdio.h>
+	<stdlib.h>
+	<signal.h>
+	<sys/time.h>
+
+1538346204 source:/home/joaovitorbf/Documents/p05/pingpong-preempcao.c
+	<stdio.h>
+	<stdlib.h>
+	"pingpong.h"
+
+1538350167 source:/home/joaovitorbf/Documents/p06/pingpong.c
+	<stdio.h>
+	<stdlib.h>
+	<ucontext.h>
+	<signal.h>
+	<sys/time.h>
+	"pingpong.h"
+	"queue.h"
+
+1538348281 /home/joaovitorbf/Documents/p06/pingpong.h
+	"datatypes.h"
+
+1538349911 /home/joaovitorbf/Documents/p06/datatypes.h
+	<ucontext.h>
+
+1537812052 /home/joaovitorbf/Documents/p06/queue.h
+
+1537812050 source:/home/joaovitorbf/Documents/p06/queue.c
+	<stdio.h>
+	<stdlib.h>
+	<assert.h>
+	"queue.h"
+
+1538348623 source:/home/joaovitorbf/Documents/p06/pingpong-contab.c
+	<stdio.h>
+	<stdlib.h>
+	"pingpong.h"
+
+1538349999 source:/home/joaovitorbf/Documents/p06/pingpong-contab-prio.c
+	<stdio.h>
+	<stdlib.h>
+	"pingpong.h"
+
+1538332264 source:/home/todos/alunos/ct/a1949772/p06/pingpong-contab-prio.c
+	<stdio.h>
+	<stdlib.h>
+	"pingpong.h"
+
+1538332264 /home/todos/alunos/ct/a1949772/p06/pingpong.h
+	"datatypes.h"
+
+1542046665 /home/todos/alunos/ct/a1949772/p06/datatypes.h
+	<ucontext.h>
+
+1538332260 source:/home/todos/alunos/ct/a1949772/p06/queue.c
+	<stdio.h>
+	<stdlib.h>
+	<assert.h>
+	"queue.h"
+
+1538332262 /home/todos/alunos/ct/a1949772/p06/queue.h
+
+1542046762 source:/home/todos/alunos/ct/a1949772/p06/pingpong.c
+	<stdio.h>
+	<stdlib.h>
+	<ucontext.h>
+	<signal.h>
+	<sys/time.h>
+	"pingpong.h"
+	"queue.h"
+
+1427489426 source:/home/todos/alunos/ct/a1949772/p06/pingpong-maintask.c
+	<stdio.h>
+	<stdlib.h>
+	"pingpong.h"
+
+1542049000 source:/home/todos/alunos/ct/a1949772/p08/pingpong.c
+	<stdio.h>
+	<stdlib.h>
+	<ucontext.h>
+	<signal.h>
+	<sys/time.h>
+	"pingpong.h"
+	"queue.h"
+
+1542047708 /home/todos/alunos/ct/a1949772/p08/pingpong.h
+	"datatypes.h"
+
+1542048807 /home/todos/alunos/ct/a1949772/p08/datatypes.h
+	<ucontext.h>
+
+1538332262 /home/todos/alunos/ct/a1949772/p08/queue.h
+
+1538332260 source:/home/todos/alunos/ct/a1949772/p08/queue.c
+	<stdio.h>
+	<stdlib.h>
+	<assert.h>
+	"queue.h"
+
+1427489450 source:/home/todos/alunos/ct/a1949772/p08/pingpong-join.c
+	<stdio.h>
+	<stdlib.h>
+	"pingpong.h"
+
+1542414480 source:/home/joaovitorbf/Desktop/p08/pingpong-join.c
+	<stdio.h>
+	<stdlib.h>
+	"pingpong.h"
+
+1542427185 /home/joaovitorbf/Desktop/p08/pingpong.h
+	"datatypes.h"
+
+1542427353 /home/joaovitorbf/Desktop/p08/datatypes.h
+	<ucontext.h>
+
+1542427325 source:/home/joaovitorbf/Desktop/p08/pingpong.c
+	<stdio.h>
+	<stdlib.h>
+	<ucontext.h>
+	<signal.h>
+	<sys/time.h>
+	"pingpong.h"
+	"queue.h"
+
+1538332262 /home/joaovitorbf/Desktop/p08/queue.h
+
+1538332260 source:/home/joaovitorbf/Desktop/p08/queue.c
+	<stdio.h>
+	<stdlib.h>
+	<assert.h>
+	"queue.h"
+
+1427482275 source:/home/joaovitorbf/Desktop/p08/pingpong-sleep.c
+	<stdio.h>
+	<stdlib.h>
+	<time.h>
+	"pingpong.h"
+
+1427486883 source:/home/joaovitorbf/Desktop/p08/pingpong-semaphore.c
+	<stdio.h>
+	<stdlib.h>
+	"pingpong.h"
+
+1542420876 source:/home/joaovitorbf/Desktop/p08/pingpong-racecond.c
+	<stdio.h>
+	<stdlib.h>
+	"pingpong.h"
+
+1542426359 source:/home/joaovitorbf/Desktop/p08/pingpong-prodcons.c
+	<stdio.h>
+	<stdlib.h>
+	"pingpong.h"
+
+1427480123 source:/home/joaovitorbf/Desktop/p08/pingpong-barrier.c
+	<stdio.h>
+	<stdlib.h>
+	<time.h>
+	"pingpong.h"
+
+1538332260 source:/home/joaovitorbf/Desktop/p12/queue.c
+	<stdio.h>
+	<stdlib.h>
+	<assert.h>
+	"queue.h"
+
+1538332262 /home/joaovitorbf/Desktop/p12/queue.h
+
+1437146390 source:/home/joaovitorbf/Desktop/p12/pingpong-mqueue.c
+	<stdio.h>
+	<stdlib.h>
+	<math.h>
+	<time.h>
+	"pingpong.h"
+
+1543816231 /home/joaovitorbf/Desktop/p12/pingpong.h
+	"datatypes.h"
+
+1543811931 /home/joaovitorbf/Desktop/p12/datatypes.h
+	<ucontext.h>
+
+1543815787 source:/home/joaovitorbf/Desktop/p12/pingpong.c
+	<stdio.h>
+	<stdlib.h>
+	<ucontext.h>
+	<signal.h>
+	<sys/time.h>
+	"pingpong.h"
+	"queue.h"
+	"harddisk.h"
+	"diskdriver.h"
+
+1428412018 source:/home/joaovitorbf/Desktop/p12/harddisk.c
+	<signal.h>
+	<sys/types.h>
+	<unistd.h>
+	<sys/stat.h>
+	<fcntl.h>
+	<time.h>
+	<stdlib.h>
+	<stdio.h>
+	"harddisk.h"
+
+1428412018 /home/joaovitorbf/Desktop/p12/harddisk.h
+
+1428413641 source:/home/joaovitorbf/Desktop/p12/pingpong-disco.c
+	<stdio.h>
+	<stdlib.h>
+	"pingpong.h"
+	"diskdriver.h"
+
+1543814720 /home/joaovitorbf/Desktop/p12/diskdriver.h
+
+1428412018 source:/home/woich/Documentos/SO/ping-pong-os---projetos-20171129/p13JV/p13/harddisk.c
+	<signal.h>
+	<sys/types.h>
+	<unistd.h>
+	<sys/stat.h>
+	<fcntl.h>
+	<time.h>
+	<stdlib.h>
+	<stdio.h>
+	"harddisk.h"
+
+1428412018 /home/woich/Documentos/SO/ping-pong-os---projetos-20171129/p13JV/p13/harddisk.h
+
+1428413641 source:/home/woich/Documentos/SO/ping-pong-os---projetos-20171129/p13JV/p13/pingpong-disco.c
+	<stdio.h>
+	<stdlib.h>
+	"pingpong.h"
+	"diskdriver.h"
+
+1543816231 /home/woich/Documentos/SO/ping-pong-os---projetos-20171129/p13JV/p13/pingpong.h
+	"datatypes.h"
+
+1543811931 /home/woich/Documentos/SO/ping-pong-os---projetos-20171129/p13JV/p13/datatypes.h
+	<ucontext.h>
+
+1543827139 /home/woich/Documentos/SO/ping-pong-os---projetos-20171129/p13JV/p13/diskdriver.h
+
+1543827132 source:/home/woich/Documentos/SO/ping-pong-os---projetos-20171129/p13JV/p13/pingpong.c
+	<stdio.h>
+	<stdlib.h>
+	<ucontext.h>
+	<signal.h>
+	<sys/time.h>
+	<string.h>
+	"pingpong.h"
+	"queue.h"
+	"harddisk.h"
+	"diskdriver.h"
+
+1538332262 /home/woich/Documentos/SO/ping-pong-os---projetos-20171129/p13JV/p13/queue.h
+
+1538332260 source:/home/woich/Documentos/SO/ping-pong-os---projetos-20171129/p13JV/p13/queue.c
+	<stdio.h>
+	<stdlib.h>
+	<assert.h>
+	"queue.h"
+

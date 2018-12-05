@@ -1,0 +1,34 @@
+#include "datatypes.h"
+
+void pingpong_init();
+int task_create (task_t *task, void (*start_routine)(void *), void *arg);
+int task_switch (task_t *task);
+void task_exit (int exit_code);
+int task_id ();
+void dispatcher_body();
+task_t* scheduler();
+void task_setprio (task_t *task, int prio);
+int task_getprio (task_t *task);
+void preemp_handler(int signum);
+unsigned int systime();
+void task_yield();
+int task_join (task_t *task);
+void task_sleep(int t);
+int find_task (task_t *task);
+int sem_create(semaphore_t *s, int value);
+int sem_down(semaphore_t *s);
+int sem_up(semaphore_t *s);
+int sem_destroy(semaphore_t *s);
+int barrier_create (barrier_t *b, int N);
+int barrier_join (barrier_t *b);
+int barrier_destroy (barrier_t *b);
+int mqueue_create (mqueue_t *queue, int max, int size);
+int mqueue_send (mqueue_t *queue, void *msg);
+int mqueue_recv (mqueue_t *queue, void *msg);
+int mqueue_destroy (mqueue_t *queue);
+int mqueue_msgs (mqueue_t *queue);
+int diskdriver_init (int *numBlocks, int *blockSize);
+int disk_block_read (int block, void *buffer);
+int disk_block_write (int block, void *buffer);
+void diskact_handler(int signum);
+void diskDriverBody(void* arg);
