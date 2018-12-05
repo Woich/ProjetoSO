@@ -13,6 +13,7 @@ typedef struct{
 
     int numBloco;
     int operacao; //0 é ler | 1 é escrever
+    void *bufferPedido;
 } pedido;
 
 // structura de dados que representa o disco para o SO
@@ -22,6 +23,10 @@ typedef struct
   int tamBlocos;
 
   struct pedido *filaPedidos;
+
+  struct semaphore_t *semAcesso;
+
+  int acordadoHandler;
   // preencher com os campos necessarios
 } disk_t ;
 

@@ -1,6 +1,6 @@
 // PingPongOS
 // Prof. Marco Aurelio, DAINF UTFPR
-// 
+//
 // Marcelo Guimarães da Costa
 // Pedro Henrique Woiciechovski
 
@@ -122,6 +122,8 @@ int mqueue_destroy (mqueue_t *queue) ;
 
 // informa o número de mensagens atualmente na fila
 int mqueue_msgs (mqueue_t *queue) ;
+
+void handlerDisco(int signum);
 
 //==============================================================================
 

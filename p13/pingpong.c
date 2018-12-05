@@ -23,8 +23,11 @@
 #define RESET_TICKS 10
 #define TICK_MICROSECONDS 1000
 
+//Criando o disco virtual
+disk_t disco;
+
 // ponteiros e tarefas notáveis
-task_t tarefaMain, *tarefaAtual, tarefaDispatcher, *tarefaLiberar;
+task_t tarefaMain, *tarefaAtual, tarefaDispatcher, *tarefaLiberar, tarefaDisco;
 
 // filas de tarefas
 task_t *filaPronta, *filaSoneca;
@@ -42,6 +45,7 @@ unsigned char FLAG_TSL;
 void CLOCK();
 short ticksRestantesTarefaAtual;
 struct sigaction strAcao;
+struct sigaction almDisco;
 struct itimerval strTimer;
 
 // Relógio do sistema
@@ -115,6 +119,14 @@ void pingpong_init() {
         perror("Erro em setitimer: ");
         exit(1);
     }
+    //Inicializa o almDisco
+    almDisco.sa_handler = handlerDisco;
+    sigemptyset(&almDisco.sa_mask);
+    almDisco.sa_flags = 0;
+    if (sigaction(SIGUSR1, &almDisco, 0) < 0) {
+        perror("Erro em sigaction: ");
+        exit(1);
+    }
 
     relogioSistema = 0;
 
@@ -122,6 +134,7 @@ void pingpong_init() {
 
     // INICIA A TASK body_escalonador
     task_create(&tarefaDispatcher, &body_dispatcher, NULL);
+    task_create(&tarefaDisco, &diskDriverBody, NULL);
     queue_remove((queue_t**)&filaPronta, (queue_t*)&tarefaDispatcher);
 
     // Ativa o dispatcher
@@ -756,3 +769,83 @@ int mqueue_msgs(mqueue_t* queue) {
     return queue->mensagensContador;
 }
 
+/*-------------------DISCO----------------------*/
+
+void diskDriverBody (void * args){
+    while(1){
+
+        if(sem_down(disco.semAcesso) < 0){
+            return -1;
+        }
+
+        if(disco.acordadoHandler == 1){
+
+        }
+
+    }
+}
+
+int diskdriver_init (int *numBlocks, int *blockSize){
+    //Tenta inicializar o disco, se ocorrer erro a função retorna -1 como foi pedido
+    if (disk_cmd (DISK_CMD_INIT, 0, 0) != 0){
+        return -1;
+    }
+
+    //pega o número de blocos dosistema
+    *numBlocks = disk_cmd (DISK_CMD_DISKSIZE, 0, 0);
+    disco.qtdBlocos = *numBlocks;
+    if(*numBlocks < 0){
+        return -1;
+    }
+
+    //Pega o tamanho de cada bloco
+    *blockSize = disk_cmd (DISK_CMD_BLOCKSIZE, 0, 0);
+    disco.tamBlocos = *blockSize;
+
+    if(*blockSize < 0){
+        return -1;
+    }
+    //Inicializa fila de pedidos
+    disco.filaPedidos = NULL;
+
+    //Inicializa semaforo de acesso;
+    disco.semAcesso = (semaphore_t*)malloc(sizeof(semaphore_t));
+
+    //Inicializa livre para acessar
+    sem_create(disco.semAcesso, 1);
+
+    //Inicialiaza a variavel que informa se foi acordado por um handler
+    disco.acordadoHandler = 0;
+
+    return 0;
+
+}
+
+int disk_block_read (int block, void *buffer){
+
+    //Pega o semaforo
+    if(sem_down(disco.semAcesso) < 0){
+        return -1;
+    }
+
+    //Cria pedido de leitura
+    pedido pedidoLeitura;
+    //Inicializa pedido
+    pedidoLeitura.ant = NULL;
+    pedidoLeitura.prox = NULL;
+    pedidoLeitura.numBloco = block;
+    pedidoLeitura.operacao = 0;
+    pedidoLeitura.bufferPedido = buffer;
+
+    //Adiciona o pedido na fila de pedidos
+    queue_append((queue_t **)&disco.filaPedidos, (queue_t*)pedidoLeitura);
+
+
+
+}
+
+void handlerDisco(int signum){
+    disco.acordadoHandler = 1;
+
+
+}
