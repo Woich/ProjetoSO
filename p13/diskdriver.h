@@ -7,9 +7,21 @@
 #ifndef __DISKDRIVER__
 #define __DISKDRIVER__
 
+typedef struct{
+    struct pedido *prox;
+    struct pedido *ant;
+
+    int numBloco;
+    int operacao; //0 é ler | 1 é escrever
+} pedido;
+
 // structura de dados que representa o disco para o SO
 typedef struct
 {
+  int qtdBlocos;
+  int tamBlocos;
+
+  struct pedido *filaPedidos;
   // preencher com os campos necessarios
 } disk_t ;
 
