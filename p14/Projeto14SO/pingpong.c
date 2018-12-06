@@ -787,6 +787,7 @@ int mqueue_msgs(mqueue_t* queue) {
 void diskDriverBody(void * args){
 
     discoPedido *pedidoAtual;
+    task_t *tarefaProxima;
 
     while(1){
         //Faz uma chamada e verifica se ocorreu bem
@@ -798,14 +799,15 @@ void diskDriverBody(void * args){
         if(disco.isSinal == 1){
             //Desativa o sinal, faz resume da primeira tarefa da lista e informa que o disco está ocupado
             disco.isSinal = 0;
-            task_resume(disco.filaEspera);
+            tarefaProxima = escalonamentoTarefaSSTF();
+            task_resume(pedidoAtual->tarefa);
             disco.isLivre = 1;
         }
 
         //Se o disco está livre e possui pedidos esperando
         if(disco.isLivre == 1 && disco.filaPedidos != NULL){
             //Remove o primeiro pedido da fila
-            pedidoAtual = escalonamentoFCFS();
+            pedidoAtual = escalonamentoPedidoSSTF();
             disco.blocoAtual = pedidoAtual->bloco;
 
             //Se for leitura
@@ -944,14 +946,30 @@ void handlerDisco(int signum){
 
 /*-----------------------ESCALONAMENTO DE DISCO-----------------------*/
 
-discoPedido* escalonamentoFCFS(){
+//para int ação 0 retornar o pedido, 1 remover o pedido
+
+discoPedido* escalonamentoPedidoFCFS(){
 
     //Remove o primeiro pedido da fila e retorna;
     return (discoPedido *)queue_remove((queue_t **)&(disco.filaPedidos), (queue_t *)disco.filaPedidos);
 
 }
 
-discoPedido* escalonamentoSSTF(){
+task_t* escalonamentoTarefaFCFS(){
+    //Retorna a tarefa de pedido
+    if(disco.filaPedidos != NULL){
+        return disco.filaPedidos->tarefa;
+    }else{
+        return NULL;
+    }
+}
+
+discoPedido* escalonamentoPedidoSSTF(){
+    //Verifica se existe fila de pedidos
+    if(disco.filaPedidos == NULL){
+        return NULL;
+    }
+
     //Variavel da menor diferença de blocos
     int menorDiferenca=1000;
     //Pedido sendo avaliado agora
@@ -974,5 +992,71 @@ discoPedido* escalonamentoSSTF(){
 
     }while(pedidoAtual != disco.filaPedidos);
 
-    return menorDistPedido;
+    return (discoPedido *)queue_remove((queue_t **)&(disco.filaPedidos), (queue_t *)menorDistPedido);
+
 }
+
+task_t* escalonamentoTarefaSSTF(){
+
+    //Verifica se existe fila de pedidos
+    if(disco.filaPedidos == NULL){
+        return NULL;
+    }
+
+    //Variavel da menor diferença de blocos
+    int menorDiferenca=1000;
+    //Pedido sendo avaliado agora
+    discoPedido *pedidoAtual;
+    //Pedido a ser retornado
+    discoPedido *menorDistPedido;
+
+    pedidoAtual = disco.filaPedidos;
+
+    //Loop para buscar menor distancia
+    do{
+        //Caso a diferença seja menor, altera o menor pedido
+        if(menorDiferenca > abs(pedidoAtual->bloco - disco.blocoAtual)){
+            menorDiferenca = abs(pedidoAtual->bloco - disco.blocoAtual);
+            menorDistPedido = pedidoAtual;
+        }
+
+        //Muda para o próximo pedido
+        pedidoAtual = pedidoAtual->next;
+
+    }while(pedidoAtual != disco.filaPedidos);
+
+    return menorDistPedido->tarefa;
+
+}
+
+discoPedido* escalonamentoPedidoCSCAN(){
+
+        //Verifica se existe fila de pedidos
+    if(disco.filaPedidos == NULL){
+        return NULL;
+    }
+
+    //Variavel da menor diferença de blocos
+    int menorDiferenca=1000;
+    //Pedido sendo avaliado agora
+    discoPedido *pedidoAtual;
+    //Pedido a ser retornado
+    discoPedido *menorDistPedido;
+
+    pedidoAtual = disco.filaPedidos;
+
+    do{
+        //Caso a diferença seja menor, altera o menor pedido
+        if(menorDiferenca > abs(pedidoAtual->bloco - disco.blocoAtual)){
+            menorDiferenca = abs(pedidoAtual->bloco - disco.blocoAtual);
+            menorDistPedido = pedidoAtual;
+        }
+
+        //Muda para o próximo pedido
+        pedidoAtual = pedidoAtual->next;
+
+    }while(pedidoAtual != disco.filaPedidos);
+
+}
+
+task_t* escalonamentoTarefaCSCAN(){}

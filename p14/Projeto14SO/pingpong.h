@@ -127,6 +127,12 @@ void handlerDisco(int signum);
 
 void diskDriverBody(void * args);
 
+task_t* escalonamentoTarefaFCFS();
+
+task_t* escalonamentoTarefaSSTF();
+
+task_t* escalonamentoTarefaCSCAN();
+
 //==============================================================================
 
 // Redefinir funcoes POSIX "proibidas" como "FORBIDDEN" (gera erro ao compilar)

@@ -56,8 +56,10 @@ int disk_block_read (int block, void *buffer) ;
 // escrita de um bloco, do buffer indicado para o disco
 int disk_block_write (int block, void *buffer) ;
 
-discoPedido* escalonamentoFCFS();
+discoPedido* escalonamentoPedidoFCFS();
 
-discoPedido* escalonamentoSSTF();
+discoPedido* escalonamentoPedidoSSTF();
+
+discoPedido* escalonamentoPedidoCSCAN();
 
 #endif
