@@ -7,32 +7,37 @@
 #ifndef __DISKDRIVER__
 #define __DISKDRIVER__
 
-typedef struct{
-    struct pedido *prox;
-    struct pedido *ant;
+typedef struct discoPedido{
+    struct discoPedido *next;
+    struct discoPedido *prev;
 
-    int numBloco;
-    int operacao; //0 é ler | 1 é escrever
-    void *bufferPedido;
+    //Tarefa do pedido
+    struct task_t *tarefa;
 
-    struct task_t *tarefaPedido; //Tarefa do pedido
-} pedido;
+    int bloco;
+    //Controla se é ler(0) ou escrever (1)
+    int escrever;
+    //Buffer do pedido
+    void *buffer;
+
+} discoPedido;
 
 // structura de dados que representa o disco para o SO
-typedef struct
-{
-  int qtdBlocos;
-  int tamBlocos;
-
-  struct pedido *filaPedidos;
-
-  struct semaphore_t *semAcesso;
-
-  int acordadoHandler;
-
-  int discoLivre;//0 está livre | 1 está ocupado;
-
-  int statusDormindo;//0 está dormindo | 1 está pronta;
+typedef struct disk_t{
+    //Tamanho do disco em blocos
+    int tamanhoDisco;
+    //Tamanho dos blocos
+    int tamanhoBloco;
+    //Se está livre
+    int isLivre;
+    //Se foi chamado por um sinal
+    int isSinal;
+    //Fila de tarefas esperando
+    struct task_t *filaEspera;
+    //Fila de pedidos
+    struct discoPedido *filaPedidos;
+    //Semaforo do disco
+    struct semaphore_t semDisco;
 
   // preencher com os campos necessarios
 } disk_t ;
