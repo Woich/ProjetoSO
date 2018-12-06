@@ -38,6 +38,8 @@ typedef struct disk_t{
     struct discoPedido *filaPedidos;
     //Semaforo do disco
     struct semaphore_t semDisco;
+    //Posição atual do disco em blocos
+    int blocoAtual;
 
   // preencher com os campos necessarios
 } disk_t ;
@@ -53,5 +55,9 @@ int disk_block_read (int block, void *buffer) ;
 
 // escrita de um bloco, do buffer indicado para o disco
 int disk_block_write (int block, void *buffer) ;
+
+discoPedido* escalonamentoFCFS();
+
+discoPedido* escalonamentoSSTF();
 
 #endif

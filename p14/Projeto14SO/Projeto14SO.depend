@@ -1,0 +1,46 @@
+# depslib dependency file v1.0
+1428412018 source:/home/woich/Documentos/SO/ping-pong-os---projetos-20171129/p14/Projeto14SO/harddisk.c
+	<signal.h>
+	<sys/types.h>
+	<unistd.h>
+	<sys/stat.h>
+	<fcntl.h>
+	<time.h>
+	<stdlib.h>
+	<stdio.h>
+	"harddisk.h"
+
+1428412018 /home/woich/Documentos/SO/ping-pong-os---projetos-20171129/p14/Projeto14SO/harddisk.h
+
+1544053155 source:/home/woich/Documentos/SO/ping-pong-os---projetos-20171129/p14/Projeto14SO/pingpong-disco.c
+	<stdio.h>
+	<stdlib.h>
+	"pingpong.h"
+	"diskdriver.h"
+
+1544062070 /home/woich/Documentos/SO/ping-pong-os---projetos-20171129/p14/Projeto14SO/pingpong.h
+	"datatypes.h"
+
+1543856279 /home/woich/Documentos/SO/ping-pong-os---projetos-20171129/p14/Projeto14SO/datatypes.h
+	<ucontext.h>
+
+1544062419 /home/woich/Documentos/SO/ping-pong-os---projetos-20171129/p14/Projeto14SO/diskdriver.h
+
+1544063618 source:/home/woich/Documentos/SO/ping-pong-os---projetos-20171129/p14/Projeto14SO/pingpong.c
+	<stdio.h>
+	<stdlib.h>
+	<signal.h>
+	<string.h>
+	<sys/time.h>
+	<math.h>
+	"pingpong.h"
+	"harddisk.h"
+	"diskdriver.h"
+	"queue.h"
+
+1543851921 /home/woich/Documentos/SO/ping-pong-os---projetos-20171129/p14/Projeto14SO/queue.h
+
+1543851915 source:/home/woich/Documentos/SO/ping-pong-os---projetos-20171129/p14/Projeto14SO/queue.c
+	<stdio.h>
+	"queue.h"
+

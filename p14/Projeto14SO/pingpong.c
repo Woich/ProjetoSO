@@ -9,6 +9,7 @@
 #include <signal.h>
 #include <string.h>
 #include <sys/time.h>
+#include <math.h>
 #include "pingpong.h"
 #include "harddisk.h"
 #include "diskdriver.h"
@@ -804,7 +805,8 @@ void diskDriverBody(void * args){
         //Se o disco está livre e possui pedidos esperando
         if(disco.isLivre == 1 && disco.filaPedidos != NULL){
             //Remove o primeiro pedido da fila
-            pedidoAtual = (discoPedido *)queue_remove((queue_t **)&(disco.filaPedidos), (queue_t *)disco.filaPedidos);
+            pedidoAtual = escalonamentoFCFS();
+            disco.blocoAtual = pedidoAtual->bloco;
 
             //Se for leitura
             if(pedidoAtual->escrever == 0){
@@ -847,6 +849,7 @@ int diskdriver_init (int *numBlocks, int *blockSize){
     disco.isSinal = 0;
     disco.filaPedidos = NULL;
     disco.filaEspera = NULL;
+    disco.blocoAtual = 0;
 
     //Inicializa o semaforo do disco
     if(sem_create(&(disco.semDisco), 1)){
@@ -937,4 +940,39 @@ int disk_block_write (int block, void *buffer){
 void handlerDisco(int signum){
     // Muda o disco para acordado por um sinal;
     disco.isSinal = 1;
+}
+
+/*-----------------------ESCALONAMENTO DE DISCO-----------------------*/
+
+discoPedido* escalonamentoFCFS(){
+
+    //Remove o primeiro pedido da fila e retorna;
+    return (discoPedido *)queue_remove((queue_t **)&(disco.filaPedidos), (queue_t *)disco.filaPedidos);
+
+}
+
+discoPedido* escalonamentoSSTF(){
+    //Variavel da menor diferença de blocos
+    int menorDiferenca=1000;
+    //Pedido sendo avaliado agora
+    discoPedido *pedidoAtual;
+    //Pedido a ser retornado
+    discoPedido *menorDistPedido;
+
+    pedidoAtual = disco.filaPedidos;
+
+    //Loop para buscar menor distancia
+    do{
+        //Caso a diferença seja menor, altera o menor pedido
+        if(menorDiferenca > abs(pedidoAtual->bloco - disco.blocoAtual)){
+            menorDiferenca = abs(pedidoAtual->bloco - disco.blocoAtual);
+            menorDistPedido = pedidoAtual;
+        }
+
+        //Muda para o próximo pedido
+        pedidoAtual = pedidoAtual->next;
+
+    }while(pedidoAtual != disco.filaPedidos);
+
+    return menorDistPedido;
 }
