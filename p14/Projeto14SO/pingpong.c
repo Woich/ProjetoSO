@@ -58,6 +58,9 @@ unsigned int relogioSistema;
 // Função a ser executada pela task do dispatcher
 void body_dispatcher(void* arg);
 
+//Contador de blocos mexidos
+int totalBlocos = 0;
+
 // Função que retorna a próxima task a ser executada.
 task_t* body_escalonador();
 
@@ -799,7 +802,7 @@ void diskDriverBody(void * args){
         if(disco.isSinal == 1){
             //Desativa o sinal, faz resume da primeira tarefa da lista e informa que o disco está ocupado
             disco.isSinal = 0;
-            tarefaProxima = escalonamentoTarefaSSTF();
+            tarefaProxima = escalonamentoTarefaFCFS();
             task_resume(pedidoAtual->tarefa);
             disco.isLivre = 1;
         }
@@ -807,7 +810,10 @@ void diskDriverBody(void * args){
         //Se o disco está livre e possui pedidos esperando
         if(disco.isLivre == 1 && disco.filaPedidos != NULL){
             //Remove o primeiro pedido da fila
-            pedidoAtual = escalonamentoPedidoSSTF();
+            pedidoAtual = escalonamentoPedidoFCFS();
+            //Soma os blocos
+            totalBlocos += abs(pedidoAtual->bloco - disco.blocoAtual);
+            printf("\nTotal de Blocos Percorridos:%d\n", totalBlocos);
             disco.blocoAtual = pedidoAtual->bloco;
 
             //Se for leitura
@@ -1031,32 +1037,89 @@ task_t* escalonamentoTarefaSSTF(){
 
 discoPedido* escalonamentoPedidoCSCAN(){
 
-        //Verifica se existe fila de pedidos
+    //Verifica se existe fila de pedidos
     if(disco.filaPedidos == NULL){
         return NULL;
     }
 
-    //Variavel da menor diferença de blocos
-    int menorDiferenca=1000;
     //Pedido sendo avaliado agora
     discoPedido *pedidoAtual;
+    //Bloco mais próximo do atual
+    discoPedido *maisProximo = NULL;
     //Pedido a ser retornado
-    discoPedido *menorDistPedido;
+    discoPedido *menorBloco = NULL;
 
     pedidoAtual = disco.filaPedidos;
 
     do{
-        //Caso a diferença seja menor, altera o menor pedido
-        if(menorDiferenca > abs(pedidoAtual->bloco - disco.blocoAtual)){
-            menorDiferenca = abs(pedidoAtual->bloco - disco.blocoAtual);
-            menorDistPedido = pedidoAtual;
+        //Verifica se existe um valor maior
+        if(pedidoAtual->bloco >= disco.blocoAtual){
+            //Verifica se já existe um pedido selecionado
+            if(maisProximo == NULL){
+                maisProximo = pedidoAtual;
+            //Verifica se existe uma distancia menor em blocos
+            }else if(abs(pedidoAtual->bloco - disco.blocoAtual) < abs(maisProximo->bloco - disco.blocoAtual)){
+                maisProximo = pedidoAtual;
+            }
         }
-
-        //Muda para o próximo pedido
-        pedidoAtual = pedidoAtual->next;
+        //busca o menor bloco
+        if(menorBloco == NULL){
+            menorBloco = pedidoAtual;
+        }else if(pedidoAtual->bloco < menorBloco->bloco){
+            menorBloco = pedidoAtual;
+        }
 
     }while(pedidoAtual != disco.filaPedidos);
 
+    //Se encontrou um bloco maior que o atual;
+    if(maisProximo != NULL){
+        return (discoPedido *)queue_remove((queue_t **)&(disco.filaPedidos), (queue_t *)maisProximo);
+    }else{
+        return (discoPedido *)queue_remove((queue_t **)&(disco.filaPedidos), (queue_t *)menorBloco);
+    }
+
 }
 
-task_t* escalonamentoTarefaCSCAN(){}
+task_t* escalonamentoTarefaCSCAN(){
+
+    //Verifica se existe fila de pedidos
+    if(disco.filaPedidos == NULL){
+        return NULL;
+    }
+
+    //Pedido sendo avaliado agora
+    discoPedido *pedidoAtual;
+    //Bloco mais próximo do atual
+    discoPedido *maisProximo = NULL;
+    //Pedido a ser retornado
+    discoPedido *menorBloco = NULL;
+
+    pedidoAtual = disco.filaPedidos;
+
+    do{
+        //Verifica se existe um valor maior
+        if(pedidoAtual->bloco >= disco.blocoAtual){
+            //Verifica se já existe um pedido selecionado
+            if(maisProximo == NULL){
+                maisProximo = pedidoAtual;
+            //Verifica se existe uma distancia menor em blocos
+            }else if(abs(pedidoAtual->bloco - disco.blocoAtual) < abs(maisProximo->bloco - disco.blocoAtual)){
+                maisProximo = pedidoAtual;
+            }
+        }
+        //busca o menor bloco
+        if(menorBloco == NULL){
+            menorBloco = pedidoAtual;
+        }else if(pedidoAtual->bloco < menorBloco->bloco){
+            menorBloco = pedidoAtual;
+        }
+
+    }while(pedidoAtual != disco.filaPedidos);
+
+    //Se encontrou um bloco maior que o atual;
+    if(maisProximo != NULL){
+        return maisProximo->tarefa;
+    }else{
+        return menorBloco->tarefa;
+    }
+}
